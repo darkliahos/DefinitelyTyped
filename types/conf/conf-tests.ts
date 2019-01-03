@@ -1,19 +1,54 @@
 import Conf = require('conf');
 
-const conf = new Conf();
+const conf = new Conf<string | number | boolean>();
+new Conf<string>({
+    defaults: {
+        foo: 'bar',
+        unicorn: 'rainbow',
+    },
+});
+new Conf<string>({ configName: '' });
+new Conf<string>({ projectName: 'foo' });
+new Conf<string>({ cwd: '' });
+new Conf<string>({ encryptionKey: '' });
+new Conf<string>({ encryptionKey: new Buffer('') });
+new Conf<string>({ encryptionKey: new Uint8Array([1]) });
+new Conf<string>({ encryptionKey: new DataView(new ArrayBuffer(2)) });
+new Conf<string>({ fileExtension: '.foo' });
+
+// $ExpectError
+new Conf<string>({
+    defaults: {
+        foo: 'bar',
+        unicorn: ['rainbow'],
+    },
+});
 conf.set('foo', 'bar');
 conf.set('hello', 1);
 conf.set('unicorn', false);
-conf.set('object', {
-	foo: 'bar',
-	unicorn: ['rainbow']
+conf.set('null', null); // $ExpectError
+
+conf.get('foo'); // $ExpectType string | number | boolean
+conf.get('foo', 'bar'); // $ExpectType string | number | boolean
+conf.get('foo', null); // $ExpectError
+conf.delete('foo');
+conf.has('foo'); // $ExpectType boolean
+conf.clear();
+conf.onDidChange('foo', (oldVal, newVal) => {
+    // $ExpectType string | number | boolean | undefined
+    oldVal;
+    // $ExpectType string | number | boolean | undefined
+    newVal;
 });
 
-conf.get('foo');
-conf.delete('foo');
-conf.has('foo');
-conf.clear();
+conf.size; // $ExpectType number
+conf.store = {
+    foo: 'bar',
+    unicorn: 'rainbow',
+};
+conf.path; // $ExpectType string
 
-for (const value of conf) {
-	console.log(value[0], value[1]);
+for (const [key, value] of conf) {
+    key; // $ExpectType string
+    value; // $ExpectType string | number | boolean
 }

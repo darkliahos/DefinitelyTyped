@@ -1,209 +1,304 @@
-// Type definitions for dockerode 2.4
+// Type definitions for dockerode 2.5
 // Project: https://github.com/apocas/dockerode
-// Definitions by: Carl Winkler <https://github.com/seikho>, Nicolas Laplante <https://github.com/nlaplante>
+// Definitions by: Carl Winkler <https://github.com/seikho>
+//                 Nicolas Laplante <https://github.com/nlaplante>
+//                 ByeongHun Yoo <https://github.com/isac322>
+//                 Ray Fang <https://github.com/lazarusx>
+//                 Marius Meisenzahl <https://github.com/meisenzahl>
+//                 Rob Moran <https://github.com/thegecko>
+//                 Cameron Diver <https://github.com/CameronDiver>
+//                 Pascal Sthamer <https://github.com/p4sca1>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+// TypeScript Version: 2.2
 
 /// <reference types="node" />
 
 import * as stream from 'stream';
 import * as events from 'events';
 
+// The modem parameter is an instance of docker-modem, which is missing type declarations.
+// https://github.com/apocas/docker-modem
+
 declare namespace Dockerode {
-  interface Container {
+  class Container {
+    constructor(modem: any, id: string);
+
+    modem: any;
+    id: string;
+
     inspect(options: {}, callback: Callback<ContainerInspectInfo>): void;
     inspect(callback: Callback<ContainerInspectInfo>): void;
-    inspect(options?: {}): { id: string };
+    inspect(options?: {}): Promise<ContainerInspectInfo>;
 
     rename(options: {}, callback: Callback<any>): void;
+    rename(options: {}): Promise<any>;
 
     update(options: {}, callback: Callback<any>): void;
+    update(options: {}): Promise<any>;
 
     top(options: {}, callback: Callback<any>): void;
     top(callback: Callback<any>): void;
+    top(options?: {}): Promise<any>;
 
     changes(callback: Callback<any>): void;
+    changes(): Promise<any>;
 
     export(callback: Callback<NodeJS.ReadableStream>): void;
+    export(): Promise<NodeJS.ReadableStream>;
 
     start(options: {}, callback: Callback<any>): void;
     start(callback: Callback<any>): void;
+    start(options?: {}): Promise<any>;
 
     pause(options: {}, callback: Callback<any>): void;
     pause(callback: Callback<any>): void;
+    pause(options?: {}): Promise<any>;
 
     unpause(options: {}, callback: Callback<any>): void;
     unpause(callback: Callback<any>): void;
+    unpause(options?: {}): Promise<any>;
 
     exec(options: {}, callback: Callback<any>): void;
+    exec(options: {}): Promise<any>;
 
     commit(options: {}, callback: Callback<any>): void;
     commit(callback: Callback<any>): void;
+    commit(options?: {}): Promise<any>;
 
     stop(options: {}, callback: Callback<any>): void;
     stop(callback: Callback<any>): void;
+    stop(options?: {}): Promise<any>;
 
     restart(options: {}, callback: Callback<any>): void;
     restart(callback: Callback<any>): void;
+    restart(options?: {}): Promise<any>;
 
     kill(options: {}, callback: Callback<any>): void;
     kill(callback: Callback<any>): void;
+    kill(options?: {}): Promise<any>;
 
     resize(options: {}, callback: Callback<any>): void;
     resize(callback: Callback<any>): void;
+    resize(options?: {}): Promise<any>;
 
     wait(callback: Callback<any>): void;
+    wait(): Promise<any>;
 
     remove(options: {}, callback: Callback<any>): void;
     remove(callback: Callback<any>): void;
+    remove(options?: {}): Promise<any>;
 
     /** Deprecated since RAPI v1.20 */
     copy(options: {}, callback: Callback<any>): void;
     /** Deprecated since RAPI v1.20 */
     copy(callback: Callback<any>): void;
+    /** Deprecated since RAPI v1.20 */
+    copy(options?: {}): Promise<any>;
 
     getArchive(options: {}, callback: Callback<NodeJS.ReadableStream>): void;
+    getArchive(options: {}): Promise<NodeJS.ReadableStream>;
 
     infoArchive(options: {}, callback: Callback<any>): void;
+    infoArchive(options: {}): Promise<any>;
 
     /** @param file Filename (will read synchronously), Buffer or stream */
     putArchive(file: string | Buffer | NodeJS.ReadableStream, options: {}, callback: Callback<NodeJS.WritableStream>): void;
+    putArchive(file: string | Buffer | NodeJS.ReadableStream, options: {}): Promise<NodeJS.ReadWriteStream>;
 
-    logs(options: { stdout?: boolean, stderr?: boolean, follow?: boolean, since?: number, details?: boolean, tail?: number, timestamps?: boolean }, callback: Callback<NodeJS.ReadableStream>): void;
+    logs(options: ContainerLogsOptions, callback: Callback<NodeJS.ReadableStream>): void;
     logs(callback: Callback<NodeJS.ReadableStream>): void;
+    logs(options?: ContainerLogsOptions): Promise<NodeJS.ReadableStream>;
 
-    stats(options: {}, callback: Callback<any>): void;
-    stats(callback: Callback<any>): void;
+    stats(options: {}, callback: Callback<ContainerStats>): void;
+    stats(callback: Callback<ContainerStats>): void;
+    stats(options?: {}): Promise<ContainerStats>;
 
-    attach(options: {}, callback: Callback<NodeJS.ReadableStream>): void;
-
-    modem: any;
-    id?: string;
+    attach(options: {}, callback: Callback<NodeJS.ReadWriteStream>): void;
+    attach(options: {}): Promise<NodeJS.ReadWriteStream>;
   }
 
-  interface Image {
+  class Image {
+    constructor(modem: any, name: string);
+
+    modem: any;
+    id: string;
+
     inspect(callback: Callback<ImageInspectInfo>): void;
+    inspect(): Promise<ImageInspectInfo>;
 
     history(callback: Callback<any>): void;
+    history(): Promise<any>;
 
     get(callback: Callback<NodeJS.ReadableStream>): void;
+    get(): Promise<NodeJS.ReadableStream>;
 
     push(options: {}, callback: Callback<NodeJS.ReadableStream>): void;
     push(callback: Callback<NodeJS.ReadableStream>): void;
+    push(options?: {}): Promise<NodeJS.ReadableStream>;
 
     tag(options: {}, callback: Callback<any>): void;
     tag(callback: Callback<any>): void;
+    tag(options?: {}): Promise<any>;
 
     remove(options: {}, callback: Callback<ImageRemoveInfo>): void;
     remove(callback: Callback<ImageRemoveInfo>): void;
-
-    modem: any;
-    id?: string;
+    remove(options?: {}): Promise<any>;
   }
 
-  interface Volume {
+  class Volume {
+    constructor(modem: any, name: string);
+
+    modem: any;
+    name: string;
+
     inspect(callback: Callback<any>): void;
+    inspect(): Promise<any>;
 
     remove(options: {}, callback: Callback<any>): void;
     remove(callback: Callback<any>): void;
-
-    modem: any;
-    name?: string;
+    remove(options?: {}): Promise<any>;
   }
 
-  interface Service {
+  class Service {
+    constructor(modem: any, id: string);
+
+    modem: any;
+    id: string;
+
     inspect(callback: Callback<any>): void;
+    inspect(): Promise<any>;
 
     remove(options: {}, callback: Callback<any>): void;
     remove(callback: Callback<any>): void;
+    remove(options?: {}): Promise<any>;
 
     update(options: {}, callback: Callback<any>): void;
-
-    modem: any;
-    id?: string;
+    update(options: {}): Promise<any>;
   }
 
-  interface Task {
+  class Task {
+    constructor(modem: any, id: string);
+
+    modem: any;
+    id: string;
+
     inspect(callback: Callback<any>): void;
-
-    modem: any;
-    id?: string;
+    inspect(): Promise<any>;
   }
 
-  interface Node {
+  class Node {
+    constructor(modem: any, id: string);
+
+    modem: any;
+    id: string;
+
     inspect(callback: Callback<any>): void;
+    inspect(): Promise<any>;
 
-    modem: any;
-    id?: string;
+    update(options: {}, callback: Callback<any>): void;
+    update(callback: Callback<any>): void;
+    update(options?: {}): Promise<any>;
+
+    remove(options: {}, callback: Callback<any>): void;
+    remove(callback: Callback<any>): void;
+    remove(options?: {}): Promise<any>;
   }
 
-  interface Plugin {
+  class Plugin {
+    constructor(modem: any, name: string, remote?: any);
+
     modem: any;
     name: string;
     remote: any;
 
     inspect(callback: Callback<PluginInspectInfo>): void;
+    inspect(): Promise<PluginInspectInfo>;
 
     remove(options: {}, callback: Callback<any>): void;
     remove(callback: Callback<any>): void;
+    remove(options?: {}): Promise<any>;
 
     privileges(callback: Callback<any>): void;
+    privileges(): Promise<any>;
 
     pull(options: {}, callback: Callback<any>): void;
+    pull(options: {}): Promise<any>;
 
     enable(options: {}, callback: Callback<any>): void;
     enable(callback: Callback<any>): void;
+    enable(options?: {}): Promise<any>;
 
     disable(options: {}, callback: Callback<any>): void;
     disable(callback: Callback<any>): void;
+    disable(options?: {}): Promise<any>;
 
     push(options: {}, callback: Callback<any>): void;
     push(callback: Callback<any>): void;
+    push(options?: {}): Promise<any>;
 
     configure(options: {}, callback: Callback<any>): void;
     configure(callback: Callback<any>): void;
+    configure(options?: {}): Promise<any>;
 
     upgrade(auth: any, options: {}, callback: Callback<any>): void;
     upgrade(auth: any, callback: Callback<any>): void;
+    upgrade(auth: any, options?: {}): Promise<any>;
   }
 
-  interface Secret {
+  class Secret {
+    constructor(modem: any, id: string);
+
+    modem: any;
+    id: string;
+
     inspect(callback: Callback<SecretInfo>): void;
+    inspect(): Promise<SecretInfo>;
 
     update(options: {}, callback: Callback<any>): void;
     update(callback: Callback<any>): void;
+    update(options?: {}): Promise<any>;
 
     remove(options: {}, callback: Callback<any>): void;
     remove(callback: Callback<any>): void;
-
-    modem: any;
-    id?: string;
+    remove(options?: {}): Promise<any>;
   }
 
-  interface Network {
+  class Network {
+    constructor(modem: any, id: string);
+
+    modem: any;
+    id: string;
+
     inspect(callback: Callback<any>): void;
+    inspect(): Promise<any>;
 
     remove(options: {}, callback: Callback<any>): void;
     remove(callback: Callback<any>): void;
+    remove(options?: {}): Promise<any>;
 
     connect(options: {}, callback: Callback<any>): void;
     connect(callback: Callback<any>): void;
+    connect(options?: {}): Promise<any>;
 
     disconnect(options: {}, callback: Callback<any>): void;
     disconnect(callback: Callback<any>): void;
-
-    modem: any;
-    id?: string;
+    disconnect(options?: {}): Promise<any>;
   }
 
-  interface Exec {
-    inspect(callback: Callback<any>): void;
-
-    start(options: {}, callback: Callback<any>): void;
-
-    resize(options: {}, callback: Callback<any>): void;
+  class Exec {
+    constructor(modem: any, id: string);
 
     modem: any;
-    id?: string;
+    id: string;
+
+    inspect(callback: Callback<any>): void;
+    inspect(): Promise<any>;
+
+    start(options: {}, callback: Callback<any>): void;
+    start(options: {}): Promise<any>;
+
+    resize(options: {}, callback: Callback<any>): void;
+    resize(options: {}): Promise<any>;
   }
 
   interface ImageInfo {
@@ -256,6 +351,20 @@ declare namespace Dockerode {
     GlobalIPv6Address: string;
     GlobalIPv6PrefixLen: number;
     MacAddress: string;
+  }
+
+  // not complete definition of network inspection
+  // info which is returned by list / inspect
+  interface NetworkInspectInfo {
+    Id: string;
+    Name: string;
+    Driver: string;
+    Created: string;
+    Scope: string;
+    EnableIPv6: boolean;
+    Internal: boolean;
+    Attachable: boolean;
+    Ingress: boolean;
   }
 
   interface ContainerInspectInfo {
@@ -331,10 +440,10 @@ declare namespace Dockerode {
       LinkLocalIPv6Address: string;
       LinkLocalIPv6PrefixLen: number;
       Ports: {
-        [portAndProtocol: string]: {
+        [portAndProtocol: string]: Array<{
           HostIp: string;
           HostPort: string;
-        }
+        }>;
       };
       SandboxKey: string;
       SecondaryIPAddresses?: any;
@@ -361,12 +470,101 @@ declare namespace Dockerode {
           GlobalIPv6Address: string;
           GlobalIPv6PrefixLen: number;
           MacAddress: string;
-        }
-      }
+        };
+      };
+      Node?: {
+        ID: string;
+        IP: string;
+        Addr: string;
+        Name: string;
+        Cpus: number;
+        Memory: number;
+        Labels: any;
+      };
     };
   }
 
+  interface NetworkStats {
+    [name: string]: {
+      rx_bytes: number;
+      rx_dropped: number;
+      rx_errors: number;
+      rx_packets: number;
+      tx_bytes: number;
+      tx_dropped: number;
+      tx_errors: number;
+      tx_packets: number;
+    };
+  }
+
+  interface CPUStats {
+    cpu_usage: {
+      percpu_usage: number[];
+      usage_in_usermode: number;
+      total_usage: number;
+      usage_in_kernelmode: number;
+    };
+    system_cpu_usage: number;
+    online_cpus: number;
+    throttling_data: {
+      periods: number;
+      throttled_periods: number;
+      throttled_time: number;
+    };
+  }
+
+  interface MemoryStats {
+    stats: {
+      total_pgmajfault: number;
+      cache: number;
+      mapped_file: number;
+      total_inactive_file: number;
+      pgpgout: number;
+      rss: number;
+      total_mapped_file: number;
+      writeback: number;
+      unevictable: number;
+      pgpgin: number;
+      total_unevictable: number;
+      pgmajfault: number;
+      total_rss: number;
+      total_rss_huge: number;
+      total_writeback: number;
+      total_inactive_anon: number;
+      rss_huge: number;
+      hierarchical_memory_limit: number;
+      total_pgfault: number;
+      total_active_file: number;
+      active_anon: number;
+      total_active_anon: number;
+      total_pgpgout: number;
+      total_cache: number;
+      inactive_anon: number;
+      active_file: number;
+      pgfault: number;
+      inactive_file: number;
+      total_pgpgin: number;
+    };
+    max_usage: number;
+    usage: number;
+    failcnt: number;
+    limit: number;
+  }
+
+  interface ContainerStats {
+    read: string;
+    pid_stats: {
+      current: number;
+    };
+    networks: NetworkStats;
+    memory_stats: MemoryStats;
+    blkio_stats: {};
+    cpu_stats: CPUStats;
+    precpu_stats: CPUStats;
+  }
+
   interface HostConfig {
+    AutoRemove: boolean;
     Binds: string[];
     ContainerIDFile: string;
     LogConfig: {
@@ -412,6 +610,7 @@ declare namespace Dockerode {
     CpusetCpus: string;
     CpusetMems: string;
     Devices?: any;
+    DiskQuota: number;
     KernelMemory: number;
     Memory: number;
     MemoryReservation: number;
@@ -492,6 +691,109 @@ declare namespace Dockerode {
     };
   }
 
+  interface AuthConfig {
+    username: string;
+    password: string;
+    serveraddress: string;
+    email?: string;
+  }
+
+  interface PortBinding {
+    HostIp?: string;
+    HostPort?: string;
+  }
+
+  interface PortMap {
+    [key: string]: PortBinding[];
+  }
+
+  interface RestartPolicy {
+    Name: string;
+    MaximumRetryCount?: number;
+  }
+
+  type LoggingDriverType =
+    | "json-file"
+    | "syslog"
+    | "journald"
+    | "gelf"
+    | "fluentd"
+    | "awslogs"
+    | "splunk"
+    | "etwlogs"
+    | "none";
+
+  interface LogConfig {
+    Type: LoggingDriverType;
+    Config?: { [key: string]: string };
+  }
+
+  interface DeviceMapping {
+    PathOnHost: string;
+    PathInContainer: string;
+    CgroupPermissions: string;
+  }
+
+  /* tslint:disable:interface-name */
+  interface IPAMConfig {
+    IPv4Address?: string;
+    IPv6Address?: string;
+    LinkLocalIPs?: string[];
+  }
+  /* tslint:enable:interface-name */
+
+  interface EndpointSettings {
+    IPAMConfig?: IPAMConfig;
+    Links?: string[];
+    Aliases?: string[];
+    NetworkID?: string;
+    EndpointID?: string;
+    Gateway?: string;
+    IPAddress?: string;
+    IPPrefixLen?: number;
+    IPv6Gateway?: string;
+    GlobalIPv6Address?: string;
+    GlobalIPV6PrefixLen?: number;
+    MacAddress?: string;
+    DriverOpts?: { [key: string]: string };
+  }
+
+  interface EndpointsConfig {
+    [key: string]: EndpointSettings;
+  }
+
+  type MountType =
+    | "bind"
+    | "volume"
+    | "tmpfs";
+
+  type MountConsistency =
+    | "default"
+    | "consistent"
+    | "cached"
+    | "delegated";
+
+  type MountPropagation =
+    | "private"
+    | "rprivate"
+    | "shared"
+    | "rshared"
+    | "slave"
+    | "rslave";
+
+  interface MountSettings {
+    Target: string;
+    Source: string;
+    Type: MountType;
+    ReadOnly ?: boolean;
+    Consistency ?: MountConsistency;
+    BindOptions ?: {
+      Propagation: MountPropagation;
+    };
+  }
+
+  type MountConfig = MountSettings[];
+
   interface ContainerCreateOptions {
     name?: string;
     Hostname?: string;
@@ -515,6 +817,7 @@ declare namespace Dockerode {
     ExposedPorts?: { [port: string]: {} };
     StopSignal?: string;
     HostConfig?: {
+      AutoRemove?: boolean;
       Binds?: string[];
       Links?: string[];
       Memory?: number;
@@ -538,7 +841,7 @@ declare namespace Dockerode {
       OomScoreAdj?: number;
       PidMode?: string;
       PidsLimit?: number;
-      PortBindings?: { [portAndProtocol: string]: Array<{ [index: string]: string }> };
+      PortBindings?: PortMap;
       PublishAllPorts?: boolean;
       Privileged?: boolean;
       ReadonlyRootfs?: boolean;
@@ -547,46 +850,42 @@ declare namespace Dockerode {
       DnsSearch?: string[];
       ExtraHosts?: any;
       VolumesFrom?: string[];
+      Mounts?: MountConfig;
       CapAdd?: string[];
       CapDrop?: string[];
       GroupAdd?: string[];
-      RestartPolicy?: { [index: string]: number | string };
+      RestartPolicy?: RestartPolicy;
       NetworkMode?: string;
-      Devices?: any[];
+      Devices?: DeviceMapping[];
       Sysctls?: { [index: string]: string };
       Ulimits?: Array<{}>;
-      LogConfig?: { [index: string]: string | {} };
+      LogConfig?: LogConfig;
       SecurityOpt?: { [index: string]: any };
       CgroupParent?: string;
       VolumeDriver?: string;
       ShmSize?: number;
     };
     NetworkingConfig?: {
-      EndpointsConfig?: {
-        [index: string]: any;
-        isolated_nw?: {
-          [index: string]: any;
-          IPAMConfig?: {
-            IPv4Address?: string;
-            IPv6Adress?: string;
-            LinkLocalIPs?: string[];
-          }
-          Links?: string[];
-          Aliases?: string[];
-        }
-      }
+      EndpointsConfig?: EndpointsConfig;
     };
+  }
+
+  interface KeyObject {
+    pem: string | Buffer;
+    passphrase?: string;
   }
 
   interface DockerOptions {
     socketPath?: string;
     host?: string;
-    port?: number;
-    ca?: string;
-    cert?: string;
-    key?: string;
+    port?: number | string;
+    ca?: string | string[] | Buffer | Buffer[];
+    cert?: string | string[] | Buffer | Buffer[];
+    key?: string | string[] | Buffer | Buffer[] | KeyObject[];
     protocol?: "https" | "http";
     timeout?: number;
+    version?: string;
+    Promise?: typeof Promise;
   }
 
   interface SecretVersion {
@@ -719,6 +1018,50 @@ declare namespace Dockerode {
   interface PruneNetworksInfo {
     NetworksDeleted: string[];
   }
+
+  interface ContainerLogsOptions {
+    stdout?: boolean;
+    stderr?: boolean;
+    follow?: boolean;
+    since?: number;
+    details?: boolean;
+    tail?: number;
+    timestamps?: boolean;
+  }
+
+  interface ImageBuildContext {
+    context: string;
+    src: string[];
+  }
+
+  interface DockerVersion {
+    ApiVersion: string;
+    Arch: string;
+    BuildTime: Date;
+    Components: Array<{
+      Details: {
+        ApiVersion: string;
+        Arch: string;
+        BuildTime: Date;
+        Experimental: string;
+        GitCommit: string;
+        GoVersion: string;
+        KernelVersion: string;
+        Os: string;
+      };
+      Name: string;
+      Version: string;
+    }>;
+    GitCommit: string;
+    GoVersion: string;
+    KernelVersion: string;
+    MinAPIVersion: string;
+    Os: string;
+    Platform: {
+      Name: string;
+    };
+    Version: string;
+  }
 }
 
 type Callback<T> = (error?: any, result?: T) => void;
@@ -727,20 +1070,27 @@ declare class Dockerode {
   constructor(options?: Dockerode.DockerOptions);
 
   createContainer(options: Dockerode.ContainerCreateOptions, callback: Callback<Dockerode.Container>): void;
+  createContainer(options: Dockerode.ContainerCreateOptions): Promise<Dockerode.Container>;
 
-  createImage(options: {}, callback: Callback<Dockerode.Image>): void;
-  createImage(auth: any, options: {}, callback: Callback<Dockerode.Image>): void;
+  createImage(options: {}, callback: Callback<NodeJS.ReadableStream>): void;
+  createImage(auth: any, options: {}, callback: Callback<NodeJS.ReadableStream>): void;
+  createImage(options: {}): Promise<NodeJS.ReadableStream>;
+  createImage(auth: any, options: {}): Promise<NodeJS.ReadableStream>;
 
-  loadImage(file: string, options: {}, callback: Callback<any>): void;
-  loadImage(file: string, callback: Callback<any>): void;
+  loadImage(file: string | NodeJS.ReadableStream, options: {}, callback: Callback<NodeJS.ReadableStream>): void;
+  loadImage(file: string | NodeJS.ReadableStream, callback: Callback<NodeJS.ReadableStream>): void;
+  loadImage(file: string | NodeJS.ReadableStream, options?: {}): Promise<NodeJS.ReadableStream>;
 
-  importImage(file: string, options: {}, callback: Callback<any>): void;
-  importImage(file: string, callback: Callback<any>): void;
+  importImage(file: string | NodeJS.ReadableStream, options: {}, callback: Callback<NodeJS.ReadableStream>): void;
+  importImage(file: string | NodeJS.ReadableStream, callback: Callback<NodeJS.ReadableStream>): void;
+  importImage(file: string | NodeJS.ReadableStream, options?: {}): Promise<NodeJS.ReadableStream>;
 
   checkAuth(options: any, callback: Callback<any>): void;
+  checkAuth(options: any): Promise<any>;
 
-  buildImage(file: string | NodeJS.ReadableStream, options: {}, callback: Callback<any>): void;
-  buildImage(file: string | NodeJS.ReadableStream, callback: Callback<any>): void;
+  buildImage(file: string | NodeJS.ReadableStream | Dockerode.ImageBuildContext, options: {}, callback: Callback<NodeJS.ReadableStream>): void;
+  buildImage(file: string | NodeJS.ReadableStream | Dockerode.ImageBuildContext, callback: Callback<NodeJS.ReadableStream>): void;
+  buildImage(file: string | NodeJS.ReadableStream | Dockerode.ImageBuildContext, options?: {}): Promise<NodeJS.ReadableStream>;
 
   getContainer(id: string): Dockerode.Container;
 
@@ -764,80 +1114,113 @@ declare class Dockerode {
 
   listContainers(options: {}, callback: Callback<Dockerode.ContainerInfo[]>): void;
   listContainers(callback: Callback<Dockerode.ContainerInfo[]>): void;
+  listContainers(options?: {}): Promise<Dockerode.ContainerInfo[]>;
 
   listImages(options: {}, callback: Callback<Dockerode.ImageInfo[]>): void;
   listImages(callback: Callback<Dockerode.ImageInfo[]>): void;
+  listImages(options?: {}): Promise<Dockerode.ImageInfo[]>;
 
   listServices(options: {}, callback: Callback<any[]>): void;
   listServices(callback: Callback<any[]>): void;
+  listServices(options?: {}): Promise<any[]>;
 
   listNodes(options: {}, callback: Callback<any[]>): void;
   listNodes(callback: Callback<any[]>): void;
+  listNodes(options?: {}): Promise<any[]>;
 
   listTasks(options: {}, callback: Callback<any[]>): void;
   listTasks(callback: Callback<any[]>): void;
+  listTasks(options?: {}): Promise<any[]>;
 
   listSecrets(options: {}, callback: Callback<Dockerode.SecretInfo[]>): void;
   listSecrets(callback: Callback<Dockerode.SecretInfo[]>): void;
+  listSecrets(options?: {}): Promise<Dockerode.SecretInfo[]>;
 
   listPlugins(options: {}, callback: Callback<Dockerode.PluginInfo[]>): void;
   listPlugins(callback: Callback<Dockerode.PluginInfo[]>): void;
+  listPlugins(options?: {}): Promise<Dockerode.PluginInfo[]>;
 
   listVolumes(options: {}, callback: Callback<any[]>): void;
   listVolumes(callback: Callback<any[]>): void;
+  listVolumes(options?: {}): Promise<any[]>;
 
   listNetworks(options: {}, callback: Callback<any[]>): void;
   listNetworks(callback: Callback<any[]>): void;
+  listNetworks(options?: {}): Promise<any[]>;
 
   createSecret(options: {}, callback: Callback<any>): void;
+  createSecret(options: {}): Promise<any>;
 
   createPlugin(options: {}, callback: Callback<any>): void;
+  createPlugin(options: {}): Promise<any>;
 
   createVolume(options: {}, callback: Callback<any>): void;
+  createVolume(options: {}): Promise<any>;
 
   createService(options: {}, callback: Callback<any>): void;
+  createService(options: {}): Promise<any>;
 
   createNetwork(options: {}, callback: Callback<any>): void;
+  createNetwork(options: {}): Promise<any>;
 
   searchImages(options: {}, callback: Callback<any>): void;
+  searchImages(options: {}): Promise<any>;
 
   pruneImages(options: {}, callback: Callback<Dockerode.PruneImagesInfo>): void;
   pruneImages(callback: Callback<Dockerode.PruneImagesInfo>): void;
+  pruneImages(options?: {}): Promise<Dockerode.PruneImagesInfo>;
 
   pruneContainers(options: {}, callback: Callback<Dockerode.PruneContainersInfo>): void;
   pruneContainers(callback: Callback<Dockerode.PruneContainersInfo>): void;
+  pruneContainers(options?: {}): Promise<Dockerode.PruneContainersInfo>;
 
   pruneVolumes(options: {}, callback: Callback<Dockerode.PruneVolumesInfo>): void;
   pruneVolumes(callback: Callback<Dockerode.PruneVolumesInfo>): void;
+  pruneVolumes(options?: {}): Promise<Dockerode.PruneVolumesInfo>;
 
   pruneNetworks(options: {}, callback: Callback<Dockerode.PruneNetworksInfo>): void;
   pruneNetworks(callback: Callback<Dockerode.PruneNetworksInfo>): void;
+  pruneNetworks(options?: {}): Promise<Dockerode.PruneNetworksInfo>;
 
   info(callback: Callback<any>): void;
+  info(): Promise<any>;
 
-  version(callback: Callback<any>): void;
+  df(callback: Callback<any>): void;
+  df(): Promise<any>;
+
+  version(callback: Callback<Dockerode.DockerVersion>): void;
+  version(): Promise<Dockerode.DockerVersion>;
 
   ping(callback: Callback<any>): void;
+  ping(): Promise<any>;
 
   getEvents(options: {}, callback: Callback<NodeJS.ReadableStream>): void;
   getEvents(callback: Callback<NodeJS.ReadableStream>): void;
+  getEvents(options?: {}): Promise<NodeJS.ReadableStream>;
 
   pull(repoTag: string, options: {}, callback: Callback<any>, auth?: {}): Dockerode.Image;
+  pull(repoTag: string, options: {}, auth?: {}): Promise<any>;
 
-  run(image: string, cmd: string[], outputStream: NodeJS.WritableStream, createOptions: {}, startOptions: {}, callback: Callback<any>): events.EventEmitter;
-  run(image: string, cmd: string[], outputStream: NodeJS.WritableStream, startOptions: {}, callback: Callback<any>): events.EventEmitter;
-  run(image: string, cmd: string[], outputStream: NodeJS.WritableStream, callback: Callback<any>): events.EventEmitter;
-  run(image: string, cmd: string[], outputStream: NodeJS.WritableStream, createOptions: {}, callback: Callback<any>): events.EventEmitter;
+  run(image: string, cmd: string[], outputStream: NodeJS.WritableStream | NodeJS.WritableStream[], createOptions: {}, startOptions: {}, callback: Callback<any>): events.EventEmitter;
+  run(image: string, cmd: string[], outputStream: NodeJS.WritableStream | NodeJS.WritableStream[], startOptions: {}, callback: Callback<any>): events.EventEmitter;
+  run(image: string, cmd: string[], outputStream: NodeJS.WritableStream | NodeJS.WritableStream[], callback: Callback<any>): events.EventEmitter;
+  run(image: string, cmd: string[], outputStream: NodeJS.WritableStream | NodeJS.WritableStream[], createOptions: {}, callback: Callback<any>): events.EventEmitter;
+  run(image: string, cmd: string[], outputStream: NodeJS.WritableStream | NodeJS.WritableStream[], createOptions?: {}, startOptions?: {}): Promise<any>;
 
   swarmInit(options: {}, callback: Callback<any>): void;
+  swarmInit(options: {}): Promise<any>;
 
   swarmJoin(options: {}, callback: Callback<any>): void;
+  swarmJoin(options: {}): Promise<any>;
 
   swarmLeave(options: {}, callback: Callback<any>): void;
+  swarmLeave(options: {}): Promise<any>;
 
   swarmUpdate(options: {}, callback: Callback<any>): void;
+  swarmUpdate(options: {}): Promise<any>;
 
   swarmInspect(callback: Callback<any>): void;
+  swarmInspect(): Promise<any>;
 
   modem: any;
 }

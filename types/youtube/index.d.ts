@@ -1,8 +1,11 @@
 // Type definitions for YouTube
 // Project: https://developers.google.com/youtube/
-// Definitions by: Daz Wilkin <https://github.com/DazWilkin/>,
+// Definitions by: Daz Wilkin <https://github.com/DazWilkin>,
 //                 Ian Obermiller <http://ianobermiller.com>,
-//                 Josh Goldberg <https://gitub.com/JoshuaKGoldberg>
+//                 Josh Goldberg <https://github.com/JoshuaKGoldberg>
+//                 Eliot Fallon <https://github.com/eliotfallon213>
+//                 Terry Mun <https://github.com/terrymun>
+//                 Paul Hobbel <https://github.com/paulhobbel>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 // TypeScript Version: 2.1
 
@@ -28,7 +31,7 @@ declare namespace YT
 	/**
 	 * Known causes for player errors.
 	 */
-	export const enum PlayerError
+	export enum PlayerError
 	{
 		/**
 		 * The request contained an invalid parameter value.
@@ -59,7 +62,7 @@ declare namespace YT
 	/**
 	 * Whether to auto-hide video controls.
 	 */
-	export const enum AutoHide
+	export enum AutoHide
 	{
 		/**
 		 * Controls are visible throughout the video
@@ -80,7 +83,7 @@ declare namespace YT
 	/**
 	 * Whether to autoplay the video.
 	 */
-	export const enum AutoPlay
+	export enum AutoPlay
 	{
 		/**
 		 * Video does not autoplay.
@@ -96,7 +99,7 @@ declare namespace YT
 	/**
 	 * Whether to use user-preferred or forced caption loading.
 	 */
-	export const enum ClosedCaptionsLoadPolicy
+	export enum ClosedCaptionsLoadPolicy
 	{
 		/**
 		 * Defaults to the user's preferences.
@@ -117,7 +120,7 @@ declare namespace YT
 	/**
 	 * How video controls are shown.
 	 */
-	export const enum Controls
+	export enum Controls
 	{
 		/**
 		 * Player controls do not display.
@@ -138,7 +141,7 @@ declare namespace YT
 	/**
 	 * Whether to allow keyboard controls.
 	 */
-	export const enum KeyboardControls
+	export enum KeyboardControls
 	{
 		/**
 		 * Keyboard controls are enabled.
@@ -154,7 +157,7 @@ declare namespace YT
 	/**
 	 * Whether the JavaScript API should be enabled.
 	 */
-	export const enum JsApi
+	export enum JsApi
 	{
 		/**
 		 * JavaScript API will be disabled.
@@ -170,7 +173,7 @@ declare namespace YT
 	/**
 	 * Whether to display the full-screen button.
 	 */
-	export const enum FullscreenButton
+	export enum FullscreenButton
 	{
 		/**
 		 * The full screen button is hidden.
@@ -186,7 +189,7 @@ declare namespace YT
 	/**
 	 * Whether to show video annotations.
 	 */
-	export const enum IvLoadPolicy
+	export enum IvLoadPolicy
 	{
 		/**
 		 * Video annotations will be shown.
@@ -222,7 +225,7 @@ declare namespace YT
 	/**
 	 * Whether a single video should be looped.
 	 */
-	export const enum Loop
+	export enum Loop
 	{
 		/**
 		 * Video or playlist will be played only once.
@@ -238,7 +241,7 @@ declare namespace YT
 	/**
 	 * Comma separated list of video IDs to play after the URL path's video.
 	 */
-	export const enum ModestBranding
+	export enum ModestBranding
 	{
 		/**
 		 * Player will contain full YouTube branding.
@@ -250,11 +253,27 @@ declare namespace YT
 		 */
 		Modest = 1
 	}
+	
+	/**
+	 * Whether to playback video inline or full-screen in an HTML5 player on iOS
+	 */
+	export enum PlaysInline
+	{
+		/**
+		 * Playback in fullscreen.
+		 */
+		Fullscreen = 0,
+
+		/**
+		 * Playback inline
+		 */
+		Inline = 1
+	}
 
 	/**
 	 * Whether to show related videos after the video finishes.
 	 */
-	export const enum RelatedVideos
+	export enum RelatedVideos
 	{
 		/**
 		 * Hide related videos after playback is complete.
@@ -266,11 +285,11 @@ declare namespace YT
 		 */
 		Show = 1
 	}
-
+	
 	/**
 	 * Whether to show video information before playing.
 	 */
-	export const enum ShowInfo
+	export enum ShowInfo
 	{
 		/**
 		 * Hide video title and uploader before video starts playing.
@@ -356,17 +375,17 @@ declare namespace YT
 		/**
 		 * Player width.
 		 */
-		width?: number;
+		width?: string | number;
 
 		/**
 		 * Player height
 		 */
-		height?: number;
+		height?: string | number;
 
 		/**
 		 * ID of the video to load.
 		 */
-		videoId: string;
+		videoId?: string;
 
 		/**
 		 * Player parameters.
@@ -377,6 +396,11 @@ declare namespace YT
 		 * Handlers for events fired by the player.
 		 */
 		events?: Events;
+
+		/**
+		 * Points host to correct origin for CORS
+		 */
+		host?: string;
 	}
 
 	/**
@@ -518,6 +542,11 @@ declare namespace YT
 		 * Comma separated list of video IDs to play after the URL path's video.
 		 */
 		playlist?: string;
+		
+		/**
+		 * Whether videos play inline or fullscreen in an HTML5 player on iOS. (currently by default, Fullscreen).
+		 */
+		playsinline?: PlaysInline;
 
 		/**
 		 * Whether to show related videos after the video finishes (by default, Show).

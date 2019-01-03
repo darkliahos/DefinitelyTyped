@@ -2,7 +2,7 @@
 // Project: https://github.com/jasmine/jasmine-ajax
 // Definitions by: Louis Grignon <https://github.com/lgrignon>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-// TypeScript Version: 2.1
+// TypeScript Version: 2.8
 
 interface JasmineAjaxResponse {
 	status?: number;
@@ -24,16 +24,18 @@ interface JasmineAjaxRequest extends XMLHttpRequest {
 	data(): string;
 
 	respondWith(response: JasmineAjaxResponse): void;
+	responseTimeout(): void;
+	responseError(): void;
 }
 
 interface JasmineAjaxRequestTracker {
-    track(request: JasmineAjaxRequest): void;
-    first(): JasmineAjaxRequest;
-    count(): number;
-    reset(): void;
-    mostRecent(): JasmineAjaxRequest;
-    at(index: number): JasmineAjaxRequest;
-    filter(urlToMatch: RegExp): JasmineAjaxRequest[];
+	track(request: JasmineAjaxRequest): void;
+	first(): JasmineAjaxRequest;
+	count(): number;
+	reset(): void;
+	mostRecent(): JasmineAjaxRequest;
+	at(index: number): JasmineAjaxRequest;
+	filter(urlToMatch: RegExp): JasmineAjaxRequest[];
 	filter(urlToMatch: Function): JasmineAjaxRequest[];
 	filter(urlToMatch: string): JasmineAjaxRequest[];
 }
@@ -48,14 +50,14 @@ interface JasmineAjaxRequestStubReturnOptions {
 
 interface JasmineAjaxRequestStub {
 	data?: string;
-    method?: string;
-    andReturn(options: JasmineAjaxRequestStubReturnOptions): void;
-    matches(fullUrl: string, data: string, method: string): boolean;
+	method?: string;
+	andReturn(options: JasmineAjaxRequestStubReturnOptions): void;
+	matches(fullUrl: string, data: string, method: string): boolean;
 }
 
 interface JasmineAjaxStubTracker {
-    addStub(stub: JasmineAjaxRequestStub): void;
-    reset(): void;
+	addStub(stub: JasmineAjaxRequestStub): void;
+	reset(): void;
 	findStub(url: string, data?: string, method?: string): JasmineAjaxRequestStub;
 }
 
